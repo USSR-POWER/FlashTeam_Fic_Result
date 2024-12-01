@@ -1,4 +1,4 @@
-import streamlit as st
+import streamlit as st 
 import requests
 import json
 
@@ -7,6 +7,40 @@ API_URL = "http://localhost:8001/predict/"
 
 st.title("FlashTeam")
 st.subheader("Загрузите JSON-файл для анализа")
+
+# Предупреждение о формате JSON
+st.warning(
+    """
+    **Формат JSON, который принимает модель:**
+    ```json
+    [
+        {
+            "position": "позиция",
+            "age": "возраст",
+            "country": "страна",
+            "city": "город",
+            "key_skills": "скилы",
+            "client_name": "компания",
+            "grade_proof": "<пустая строка>",
+            "salary": "зп",
+            "work_experience": "периоды работы, начинающиеся с даты такого формата 2013-12-01 – 2022-11-12 : "
+        },
+        {
+            "position": "позиция",
+            "age": "возраст",
+            "country": "страна",
+            "city": "город",
+            "key_skills": "скилы",
+            "client_name": "компания",
+            "grade_proof": "<пустая строка>",
+            "salary": "зп",
+            "work_experience": "периоды работы, начинающиеся с даты такого формата 2013-12-01 – 2022-11-12 : "
+        }
+    ]
+    ```
+    Обратите внимание: все поля обязательны, а значение `grade_proof` должно быть пустой строкой (`""`).
+    """
+)
 
 # Загрузка файла
 uploaded_file = st.file_uploader("Загрузите JSON-файл", type=["json"])
@@ -37,7 +71,7 @@ if uploaded_file is not None:
 
     # Отправка на сервер
     if st.button("Отправить на API"):
-        st.info("Выполняем оценку грейдов сотрудников (одна запись обрабатывается ~1 сек...")
+        st.info("Выполняем оценку грейдов сотрудников (одна запись обрабатывается ~2 сек)...")
 
         # Преобразование в JSON
         json_data = json.dumps(input_data)
@@ -56,7 +90,7 @@ if uploaded_file is not None:
             st.write(f"**Среднее время на запись (секунды):** {metrics.get('average_time_per_record_seconds', 'N/A')}")
 
             # Вывод кратко номеров строк и результатов
-            st.subheader("Номер строки и Резлуьтат предсказания")
+            st.subheader("Номер строки и Результат предсказания")
             index_mapping = response_data.get("index_mapping", [])
             if index_mapping:
                 st.write("Количество строк:", len(index_mapping))
